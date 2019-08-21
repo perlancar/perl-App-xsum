@@ -61,6 +61,29 @@ _
             summary => 'Unix utility',
         },
     ],
+    examples => [
+        {
+            summary => 'Compute MD5 digests for some files',
+            src => 'xsum -a md5 *.dat',
+            src_plang => 'bash',
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+        {
+            summary => 'Compute SHA1 digest for data in stdin',
+            src => 'somecmd | xsum -a sha1 -',
+            src_plang => 'bash',
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+        {
+            summary => 'Check MD5 digests of files listed in MD5SUMS',
+            src => 'xsum --check -a md5 MD5SUMS',
+            src_plang => 'bash',
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+    ],
     'cmdline.skip_format' => 1,
 };
 sub xsum {
