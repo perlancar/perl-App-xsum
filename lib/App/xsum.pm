@@ -28,6 +28,7 @@ _
         check => {
             summary => 'Read checksum from files and check them',
             schema => ['bool', is=>1],
+            cmdline_aliases => {c=>{}},
         },
         files => {
             'x.name.is_plural' => 1,
