@@ -14,14 +14,15 @@ $SPEC{xsum} = {
     summary => 'Compute and check file checksums/digests (using various algorithms)',
     description => <<'_',
 
-`xsum` is a handy utility as an alternative/replacement to the individual
-per-algorithm utilities like `md5sum`, `sha1sum`, `sha224sum`, and so on. It's
-basically the same as the mentioned Unix utilities but you can use a single
-command instead.
+`xsum` is a small handy utility that can be used as an alternative/replacement
+for the individual per-algorithm Unix utilities like `md5sum`, `sha1sum`,
+`sha224sum`, and so on. It's basically the same as said Unix utilities but you
+can use a single command instead.
 
 The backend of `xsum` is a Perl module <pm:File::Digest> which in turn delegates
 to the individual per-algorithm backend like <pm:Digest::MD5>, <pm:Digest::SHA>,
-and so on.
+and so on. Most of the backend modules are written in C/XS so you don't suffer
+significant performance decrease.
 
 _
     args => {
