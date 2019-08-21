@@ -14,7 +14,7 @@ $SPEC{xsum} = {
     summary => 'Compute and check file checksums/digests (using various algorithms)',
     description => <<'_',
 
-`xsum` is a small handy utility that can be used as an alternative/replacement
+`xsum` is a handy small utility that can be used as an alternative/replacement
 for the individual per-algorithm Unix utilities like `md5sum`, `sha1sum`,
 `sha224sum`, and so on. It's basically the same as said Unix utilities but you
 can use a single command instead.
