@@ -11,7 +11,13 @@ our %SPEC;
 
 $SPEC{xsum} = {
     v => 1.1,
-    summary => 'Compute and check file checksums/digests',
+    summary => 'Compute and check file checksums/digests (using various algorithms)',
+    description => <<'_',
+
+`xsum` is a handy utility as an alternative/replacement to the individual
+per-algorithm utilities like `md5sum`, `sha1sum`, `sha224sum`, and so on.
+
+_
     args => {
         tag => {
             summary => 'Create a BSD-style checksum',
