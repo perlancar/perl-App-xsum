@@ -11,6 +11,7 @@ our %SPEC;
 
 $SPEC{xsum} = {
     v => 1.1,
+    summary => 'Compute and check file checksums/digests',
     args => {
         tag => {
             summary => 'Create a BSD-style checksum',
@@ -118,7 +119,7 @@ sub xsum {
 }
 
 1;
-#ABSTRACT: Compute and check file checksums/digests
+#ABSTRACT:
 
 =head1 SYNOPSIS
 
