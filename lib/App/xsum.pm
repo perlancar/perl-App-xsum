@@ -48,7 +48,19 @@ $SPEC{xsum} = {
             summary => 'Unix utility',
         },
         {
+            url => 'prog:sha224sum',
+            summary => 'Unix utility',
+        },
+        {
             url => 'prog:sha256sum',
+            summary => 'Unix utility',
+        },
+        {
+            url => 'prog:sha384sum',
+            summary => 'Unix utility',
+        },
+        {
+            url => 'prog:sha512sum',
             summary => 'Unix utility',
         },
     ],
@@ -127,5 +139,4 @@ See L<xsum>.
 
 =head1 append:SEE ALSO
 
-Backend module: L<File::Digest>, which in turn uses L<Digest::CRC>,
-L<Digest::MD5>, and L<Digest::SHA>.
+L<sum> from L<PerlPowerTools> (which only supports older algorithms like CRC32).
