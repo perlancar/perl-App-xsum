@@ -1,6 +1,6 @@
 0.005   2019-09-12  Released-By: PERLANCAR; Urgency: medium
 
-	- [ux] Make -a defaults to 'Digest' (and thus optional) if we already
+	- [ux] Make -a default to 'Digest' (and thus optional) if we already
           specify A.
 
 
