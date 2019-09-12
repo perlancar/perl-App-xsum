@@ -41,7 +41,14 @@ _
             schema => ['array*', of=>'filename*'],
             req => 1,
             pos => 0,
-            greedy => 1,
+            slurpy => 1,
+        },
+        checksums => {
+            'x.name.is_plural' => 1,
+            'x.name.singular' => 'file',
+            summary => 'Supply checksum(s)',
+            schema => ['array*', of=>'str*'],
+            cmdline_aliases => {C=>{}},
         },
         algorithm => {
             schema => ['str*', in=>[qw/crc32 md5 sha1 sha224 sha256 sha384 sha512 sha512224 sha512256/]],
@@ -89,6 +96,20 @@ _
             test => 0,
             'x.doc.show_result' => 0,
         },
+        {
+            summary => 'Check MD5 digest of one file',
+            src => 'xsum -a md5 download.exe -C 9f4b2277f50a412e56de6e0306f4afb8',
+            src_plang => 'bash',
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+        {
+            summary => 'Check MD5 digest of two files',
+            src => 'xsum -a md5 download1.exe -C 9f4b2277f50a412e56de6e0306f4afb8 download2.zip -C 62b3bf86abdfdd87e9f6a3ea7b51aa7b',
+            src_plang => 'bash',
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
     ],
     'cmdline.skip_format' => 1,
 };
@@ -100,8 +121,13 @@ sub xsum {
 
     my $num_success;
     my $envres;
+    my $i = -1;
     for my $file (@{ $args{files} }) {
+        $i++;
         if ($args{check}) {
+
+            # treat file as checksums file. extract filenames and checksums from
+            # the checksums file and check them.
             my $res = Parse::Sums::parse_sums(filename => $file);
             unless ($res->[0] == 200) {
                 $envres //= [
@@ -135,7 +161,35 @@ sub xsum {
                     print "$entry->{file}: FAILED\n";
                 }
             }
+
+        } elsif ($args{checksums} && @{ $args{checksums} }) {
+
+            # check checksum of file against checksum provided in 'checksums'
+            # argument.
+            if ($#{ $args{checksums} } < $i) {
+                warn "No checksum value provided for file '$file', please specify with -C\n";
+                next;
+            }
+            my $digest_res = File::Digest::digest_file(
+                file => $file, algorithm => $args{algorithm});
+            unless ($digest_res) {
+                $envres //= [
+                    500, "Some files' checksums cannot be checked"];
+                warn "$file: Cannot compute digest: $digest_res->[1]\n";
+                next;
+            }
+            if ($digest_res->[2] eq $args{checksums}[$i]) {
+                print "$file: OK\n";
+                $num_success++;
+            } else {
+                $envres //= [
+                    500, "Some files did NOT match computed checksums"];
+                print "$file: FAILED\n";
+            }
+
         } else {
+
+            # produce checksum for file
             my $res = File::Digest::digest_file(
                 file => $file, algorithm => $args{algorithm});
             unless ($res->[0] == 200) {
@@ -148,6 +202,7 @@ sub xsum {
             } else {
                 printf "%s  %s\n", $res->[2], $file;
             }
+
         }
     }
 
