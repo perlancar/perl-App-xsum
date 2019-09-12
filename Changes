@@ -1,3 +1,10 @@
+0.006   2019-09-12  Released-By: PERLANCAR; Urgency: low
+
+	- No functional changes.
+
+	- [doc] Tweak examples.
+
+
 0.005   2019-09-12  Released-By: PERLANCAR; Urgency: medium
 
 	- [ux] Make -a default to 'Digest' (and thus optional) if we already
