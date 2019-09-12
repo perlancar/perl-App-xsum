@@ -1,3 +1,8 @@
+0.007   2019-09-12  Released-By: PERLANCAR; Urgency: medium
+
+	- [bugfix] Perform checksum checking case-insensitively [GH#3].
+
+
 0.006   2019-09-12  Released-By: PERLANCAR; Urgency: low
 
 	- No functional changes.
