@@ -51,9 +51,26 @@ _
             cmdline_aliases => {C=>{}},
         },
         algorithm => {
-            schema => ['str*', in=>[qw/crc32 md5 sha1 sha224 sha256 sha384 sha512 sha512224 sha512256/]],
+            schema => ['str*', in=>[qw/crc32 md5 sha1 sha224 sha256 sha384 sha512 sha512224 sha512256 Digest/]],
             default => 'md5',
+            description => <<'_',
+
+In addition to `md5`, `sha1` or the other algorithms, you can also specify
+`Digest` to use Perl's <pm:Digest> module. This gives you access to tens of
+other digest modules, for example <pm:Digest::BLAKE2> (see examples).
+
+_
             cmdline_aliases => {a=>{}},
+        },
+        digest_args => {
+            schema => ['array*', of=>'str*', 'x.perl.coerce_rules'=>['str_comma_sep']],
+            description => <<'_',
+
+If you use `Digest` as the algorithm, you can pass arguments for the <pm:Digest>
+module here.
+
+_
+            cmdline_aliases => {A=>{}},
         },
     },
     links => [
@@ -78,6 +95,20 @@ _
         {
             summary => 'Compute MD5 digests for some files',
             src => 'xsum -a md5 *.dat',
+            src_plang => 'bash',
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+        {
+            summary => 'Compute MD5 digests for some files',
+            src => 'xsum -a Digest -A MD5 *.dat',
+            src_plang => 'bash',
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+        {
+            summary => 'Compute BLAKE2b digests for some files',
+            src => 'xsum -a Digest -A BLAKE2,blake2b *.dat',
             src_plang => 'bash',
             test => 0,
             'x.doc.show_result' => 0,
@@ -171,7 +202,7 @@ sub xsum {
                 next;
             }
             my $digest_res = File::Digest::digest_file(
-                file => $file, algorithm => $args{algorithm});
+                file => $file, algorithm => $args{algorithm}, digest_args=> $args{digest_args});
             unless ($digest_res) {
                 $envres //= [
                     500, "Some files' checksums cannot be checked"];
@@ -191,7 +222,7 @@ sub xsum {
 
             # produce checksum for file
             my $res = File::Digest::digest_file(
-                file => $file, algorithm => $args{algorithm});
+                file => $file, algorithm => $args{algorithm}, digest_args=> $args{digest_args});
             unless ($res->[0] == 200) {
                 warn "Can't checksum $file: $res->[1]\n";
                 next;
