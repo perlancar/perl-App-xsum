@@ -100,14 +100,14 @@ _
             'x.doc.show_result' => 0,
         },
         {
-            summary => 'Compute MD5 digests for some files',
+            summary => 'Compute MD5 digests for some files (same as previous example)',
             src => 'xsum -a Digest -A MD5 *.dat',
             src_plang => 'bash',
             test => 0,
             'x.doc.show_result' => 0,
         },
         {
-            summary => 'Compute BLAKE2b digests for some files',
+            summary => 'Compute BLAKE2b digests for some files (requirest Digest::BLAKE2 Perl module)',
             src => 'xsum -a Digest -A BLAKE2,blake2b *.dat',
             src_plang => 'bash',
             test => 0,

@@ -1,3 +1,9 @@
+0.004   2019-09-12  Released-By: PERLANCAR; Urgency: medium
+
+	- Allow using all digest algorithms from Digest::* modules by
+	  setting -a to Digest and then specifying --digest-args (-A).
+
+
 0.003   2019-09-12  Released-By: PERLANCAR; Urgency: medium
 
 	- Add option: --checksum (-C) to specify checksum on the
