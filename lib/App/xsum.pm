@@ -214,7 +214,7 @@ sub xsum {
                     warn "$entry->{file}: Cannot compute digest: $digest_res->[1]\n";
                     next ENTRY;
                 }
-                if ($digest_res->[2] eq $entry->{digest}) {
+                if (lc($digest_res->[2]) eq lc($entry->{digest})) {
                     print "$entry->{file}: OK\n";
                     $num_success++;
                 } else {
@@ -240,7 +240,7 @@ sub xsum {
                 warn "$file: Cannot compute digest: $digest_res->[1]\n";
                 next;
             }
-            if ($digest_res->[2] eq $args{checksums}[$i]) {
+            if (lc($digest_res->[2]) eq lc($args{checksums}[$i])) {
                 print "$file: OK\n";
                 $num_success++;
             } else {
