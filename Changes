@@ -1,3 +1,9 @@
+0.003   2019-09-12  Released-By: PERLANCAR; Urgency: medium
+
+	- Add option: --checksum (-C) to specify checksum on the
+	  command-line (suggested by Chris White, GH#2).
+
+
 0.002   2019-08-21  Released-By: PERLANCAR; Urgency: medium
 
 	- Update to File::Digest 0.008 which supports reading from stdin
