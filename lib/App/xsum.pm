@@ -52,12 +52,15 @@ _
         },
         algorithm => {
             schema => ['str*', in=>[qw/crc32 md5 sha1 sha224 sha256 sha384 sha512 sha512224 sha512256 Digest/]],
-            default => 'md5',
             description => <<'_',
 
 In addition to `md5`, `sha1` or the other algorithms, you can also specify
 `Digest` to use Perl's <pm:Digest> module. This gives you access to tens of
 other digest modules, for example <pm:Digest::BLAKE2> (see examples).
+
+When `--digest-args` (`-A`) is not specified, algorithm defaults to `md5`. But
+if `--digest-args` (`-A`) is specified, algorithm defaults to `Digest`, for
+convenience.
 
 _
             cmdline_aliases => {a=>{}},
@@ -107,8 +110,15 @@ _
             'x.doc.show_result' => 0,
         },
         {
+            summary => 'Compute MD5 digests for some files (also same as previous example, -a defaults to "Digest" when -A is specified)',
+            src => 'xsum -A MD5 *.dat',
+            src_plang => 'bash',
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+        {
             summary => 'Compute BLAKE2b digests for some files (requirest Digest::BLAKE2 Perl module)',
-            src => 'xsum -a Digest -A BLAKE2,blake2b *.dat',
+            src => 'xsum -A BLAKE2,blake2b *.dat',
             src_plang => 'bash',
             test => 0,
             'x.doc.show_result' => 0,
@@ -149,6 +159,8 @@ sub xsum {
     require Parse::Sums;
 
     my %args = @_;
+
+    my $algorithm = $args{algorithm} // ($args{digest_args} ? 'Digest' : 'md5');
 
     my $num_success;
     my $envres;
@@ -202,7 +214,7 @@ sub xsum {
                 next;
             }
             my $digest_res = File::Digest::digest_file(
-                file => $file, algorithm => $args{algorithm}, digest_args=> $args{digest_args});
+                file => $file, algorithm => $algorithm, digest_args=> $args{digest_args});
             unless ($digest_res) {
                 $envres //= [
                     500, "Some files' checksums cannot be checked"];
@@ -222,14 +234,14 @@ sub xsum {
 
             # produce checksum for file
             my $res = File::Digest::digest_file(
-                file => $file, algorithm => $args{algorithm}, digest_args=> $args{digest_args});
+                file => $file, algorithm => $algorithm, digest_args=> $args{digest_args});
             unless ($res->[0] == 200) {
                 warn "Can't checksum $file: $res->[1]\n";
                 next;
             }
             $num_success++;
             if ($args{tag}) {
-                printf "%s (%s) = %s\n", uc($args{algorithm}), $file, $res->[2];
+                printf "%s (%s) = %s\n", uc($algorithm), $file, $res->[2];
             } else {
                 printf "%s  %s\n", $res->[2], $file;
             }
