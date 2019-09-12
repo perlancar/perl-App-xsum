@@ -1,3 +1,9 @@
+0.005   2019-09-12  Released-By: PERLANCAR; Urgency: medium
+
+	- [ux] Make -a defaults to 'Digest' (and thus optional) if we already
+          specify A.
+
+
 0.004   2019-09-12  Released-By: PERLANCAR; Urgency: medium
 
 	- Allow using all digest algorithms from Digest::* modules by
