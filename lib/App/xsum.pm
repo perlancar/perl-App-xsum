@@ -113,6 +113,13 @@ _
                                 word => $last_word,
                             );
                         }
+                    } elsif ($digest_module eq 'SHA') {
+                        if (@words == 2) {
+                            $arg_completion = Complete::Util::complete_array_elem(
+                                array => [qw/1 256 384 512/],
+                                word => $last_word,
+                            );
+                        }
                     }
                     goto RETURN_AS_IS unless $arg_completion && @$arg_completion;
                     return [map {"$prefix,$_"} @$arg_completion];
