@@ -74,6 +74,53 @@ module here.
 
 _
             cmdline_aliases => {A=>{}},
+            completion => sub {
+                # due to coerce rule 'str_comma_sep', 'completion' instead of
+                # 'element_completion' is invoked. we need to split and merge
+                # comma-separated list ourself.
+
+                require Complete::Util;
+
+                my %args = @_;
+                my $word  = $args{word};
+
+                my @words = split ",", $word, -1;
+                #use DD; dd \@words;
+
+                if (@words <= 1) {
+                    require Complete::Module;
+                    my $answer = Complete::Util::arrayify_answer(
+                        Complete::Module::complete_module(
+                            ns_prefix => 'Digest',
+                            word => $words[0] // '',
+                        ),
+                    );
+                    # remove Digest::* modules that we know isn't a "proper" Digest module
+                    # or that we don't want.
+                    $answer = [ grep {!/^(base|file)$/} @$answer];
+                    return $answer;
+                } elsif (@words) {
+                    my $digest_module = $words[0];
+                    my $last_word = $words[-1];
+                    my $prefix = join(",", @words[0..$#words-1]);
+                    my $arg_completion;
+
+                    #use DD; dd {digest_module=>$digest_module, last_word=>$last_word};
+                    if ($digest_module eq 'BLAKE2') {
+                        if (@words == 2) {
+                            $arg_completion = Complete::Util::complete_array_elem(
+                                array => ['blake2s', 'blake2b'],
+                                word => $last_word,
+                            );
+                        }
+                    }
+                    goto RETURN_AS_IS unless $arg_completion && @$arg_completion;
+                    return [map {"$prefix,$_"} @$arg_completion];
+                } else {
+                }
+              RETURN_AS_IS:
+                return [$word, "$word "];
+            },
         },
     },
     links => [
