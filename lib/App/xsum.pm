@@ -113,6 +113,12 @@ _
                                 word => $last_word,
                             );
                         }
+                    } elsif ($digest_module eq 'SHA') {
+                        if (@words == 2) {
+                            $arg_completion = Complete::Util::complete_array_elem(
+                                array => [qw/1 256 384 512/],
+                                word => $last_word,
+                            );
                     } elsif ($digest_module eq 'CRC') {
                         # args for Digest::CRC is key=>value pairs.
                         my @pairs = @words; shift @pairs;
