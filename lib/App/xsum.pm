@@ -142,6 +142,27 @@ _
                                 );
                             }
                         }
+                    } elsif ($digest_module eq 'Bcrypt') {
+                        # args for Digest::Bcrypt is key=>value pairs.
+                        my @pairs = @words; shift @pairs;
+                        if (@pairs % 2) {
+                            # completing key
+                            pop @pairs;
+                            my %pairs = @pairs;
+                            $arg_completion = Complete::Util::arrayify_answer(
+                                Complete::Util::complete_array_elem(
+                                    array   => [qw/cost salt settings/],
+                                    word    => $last_word,
+                                    exclude => [keys %pairs], # keys already specified
+                                ),
+                            );
+                        } else {
+                            # completing value
+                            my $key = $words[-2];
+                            if ($key eq 'cost') {
+                                # ...
+                            }
+                        }
                     }
 
                     goto RETURN_AS_IS unless $arg_completion && @$arg_completion;
