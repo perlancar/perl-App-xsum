@@ -119,6 +119,7 @@ _
                                 array => [qw/1 256 384 512/],
                                 word => $last_word,
                             );
+                        }
                     } elsif ($digest_module eq 'CRC') {
                         # args for Digest::CRC is key=>value pairs.
                         my @pairs = @words; shift @pairs;
@@ -177,7 +178,7 @@ _
                 }
               RETURN_AS_IS:
                 return [$word, "$word "];
-            },
+            }
         },
     },
     links => [

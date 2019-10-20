@@ -1,3 +1,8 @@
+0.008   2019-09-12  Released-By: PERLANCAR; Urgency: low
+
+        - [ux] Add completion for --digest-args (-A) (for Bcrypt, SHA, CRC).
+
+
 0.007   2019-09-12  Released-By: PERLANCAR; Urgency: medium
 
 	- [bugfix] Perform checksum checking case-insensitively [GH#3].
