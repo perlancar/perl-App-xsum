@@ -74,6 +74,110 @@ module here.
 
 _
             cmdline_aliases => {A=>{}},
+            completion => sub {
+                # due to coerce rule 'str_comma_sep', 'completion' instead of
+                # 'element_completion' is invoked. we need to split and merge
+                # comma-separated list ourself.
+
+                require Complete::Util;
+
+                my %args = @_;
+                my $word  = $args{word};
+
+                my @words = split ",", $word, -1;
+                #use DD; dd \@words;
+
+                if (@words <= 1) {
+                    require Complete::Module;
+                    my $answer = Complete::Util::arrayify_answer(
+                        Complete::Module::complete_module(
+                            ns_prefix => 'Digest',
+                            word => $words[0] // '',
+                        ),
+                    );
+                    # remove Digest::* modules that we know isn't a "proper" Digest module
+                    # or that we don't want.
+                    $answer = [ grep {!/^(base|file)$/} @$answer];
+                    return $answer;
+                } elsif (@words) {
+                    my $digest_module = $words[0];
+                    my $last_word = $words[-1];
+                    my $prefix = join(",", @words[0..$#words-1]);
+                    my $arg_completion;
+
+                    #use DD; dd {digest_module=>$digest_module, last_word=>$last_word};
+                    if ($digest_module eq 'BLAKE2') {
+                        if (@words == 2) {
+                            $arg_completion = Complete::Util::complete_array_elem(
+                                array => ['blake2s', 'blake2b'],
+                                word => $last_word,
+                            );
+                        }
+                    } elsif ($digest_module eq 'SHA') {
+                        if (@words == 2) {
+                            $arg_completion = Complete::Util::complete_array_elem(
+                                array => [qw/1 256 384 512/],
+                                word => $last_word,
+                            );
+                    } elsif ($digest_module eq 'CRC') {
+                        # args for Digest::CRC is key=>value pairs.
+                        my @pairs = @words; shift @pairs;
+                        if (@pairs % 2) {
+                            # completing key
+                            pop @pairs;
+                            my %pairs = @pairs;
+                            $arg_completion = Complete::Util::arrayify_answer(
+                                Complete::Util::complete_array_elem(
+                                    array   => [qw/type width init xorout refout poly refin cont/],
+                                    word    => $last_word,
+                                    exclude => [keys %pairs], # keys already specified
+                                ),
+                            );
+                        } else {
+                            # completing value
+                            my $key = $words[-2];
+                            if ($key eq 'type') {
+                                $arg_completion = Complete::Util::complete_array_elem(
+                                    array=>[qw/crc8 crc16 crc32 crc64 crcccitt crcopenpgparmor/],
+                                    word=>$last_word,
+                                );
+                            } elsif ($key eq 'width') {
+                                $arg_completion = Complete::Util::complete_array_elem(
+                                    array=>[qw/8 16 32 64/],
+                                    word=>$last_word,
+                                );
+                            }
+                        }
+                    } elsif ($digest_module eq 'Bcrypt') {
+                        # args for Digest::Bcrypt is key=>value pairs.
+                        my @pairs = @words; shift @pairs;
+                        if (@pairs % 2) {
+                            # completing key
+                            pop @pairs;
+                            my %pairs = @pairs;
+                            $arg_completion = Complete::Util::arrayify_answer(
+                                Complete::Util::complete_array_elem(
+                                    array   => [qw/cost salt settings/],
+                                    word    => $last_word,
+                                    exclude => [keys %pairs], # keys already specified
+                                ),
+                            );
+                        } else {
+                            # completing value
+                            my $key = $words[-2];
+                            if ($key eq 'cost') {
+                                # ...
+                            }
+                        }
+                    }
+
+                    goto RETURN_AS_IS unless $arg_completion && @$arg_completion;
+                    return [map {"$prefix,$_"} @$arg_completion];
+                } else {
+                }
+              RETURN_AS_IS:
+                return [$word, "$word "];
+            },
         },
     },
     links => [
