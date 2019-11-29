@@ -1,6 +1,8 @@
 package App::xsum;
 
+# AUTHORITY
 # DATE
+# DIST
 # VERSION
 
 use 5.010001;
@@ -66,7 +68,7 @@ _
             cmdline_aliases => {a=>{}},
         },
         digest_args => {
-            schema => ['array*', of=>'str*', 'x.perl.coerce_rules'=>['str_comma_sep']],
+            schema => ['array*', of=>'str*', 'x.perl.coerce_rules'=>['From_str::comma_sep']],
             description => <<'_',
 
 If you use `Digest` as the algorithm, you can pass arguments for the <pm:Digest>
