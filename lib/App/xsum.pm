@@ -68,7 +68,15 @@ _
             cmdline_aliases => {a=>{}},
         },
         digest_args => {
-            schema => ['array*', of=>'str*', 'x.perl.coerce_rules'=>['From_str::comma_sep']],
+            schema => ['array*',
+
+                       # comment out temporarily, Perinci::Sub::GetArgs::Argv
+                       # clashes with coerce rules; we should fix
+                       # Perinci::Sub::GetArgs::Argv to observe coercion rules
+                       # first
+                       #of=>'str*',
+
+                       'x.perl.coerce_rules'=>['From_str::comma_sep']],
             description => <<'_',
 
 If you use `Digest` as the algorithm, you can pass arguments for the <pm:Digest>
