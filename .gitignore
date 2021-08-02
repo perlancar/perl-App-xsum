@@ -2,3 +2,4 @@ App-xsum-*
 .build
 *~
 nytprof*
+.DS_Store
