@@ -41,9 +41,12 @@ MARKDOWN
             'x.name.is_plural' => 1,
             'x.name.singular' => 'file',
             schema => ['array*', of=>'filename*'],
-            req => 1,
             pos => 0,
             slurpy => 1,
+        },
+        files_from => {
+            schema => 'filename*',
+            cmdline_aliases => {T=>{}},
         },
         checksums => {
             'x.name.is_plural' => 1,
@@ -221,6 +224,9 @@ MARKDOWN
             summary => 'Unix utility',
         },
     ],
+    args_rels => {
+        req_one => ['files', 'files_from'],
+    },
     examples => [
         {
             summary => 'Compute MD5 digests for some files',
@@ -296,10 +302,24 @@ sub xsum {
 
     my $algorithm = $args{algorithm} // ($args{digest_args} ? 'Digest' : 'md5');
 
+    my @files;
+    if (defined $args{files_from}) {
+        open my $fh, "<", $args{files_from}
+            or return [500, "Can't open '$args{files_from}': $!"];
+        while (my $line = <$fh>) {
+            chomp $line;
+            push @files, $line;
+        }
+    } elsif ($args{files} && @{ $args{files} }) {
+        @files = @{ $args{files} };
+    } else {
+        return [400, "Please supply 'files' from 'files_from'"];
+    }
+
     my $num_success;
     my $envres;
     my $i = -1;
-    for my $file (@{ $args{files} }) {
+    for my $file (@files) {
         $i++;
         if ($args{check}) {
 
