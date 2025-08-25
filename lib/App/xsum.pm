@@ -1,20 +1,20 @@
 package App::xsum;
 
-# AUTHORITY
-# DATE
-# DIST
-# VERSION
-
 use 5.010001;
 use strict;
 use warnings;
 
 our %SPEC;
 
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
+
 $SPEC{xsum} = {
     v => 1.1,
     summary => 'Compute and check file checksums/digests (using various algorithms)',
-    description => <<'_',
+    description => <<'MARKDOWN',
 
 `xsum` is a handy small utility that can be used as an alternative/replacement
 for the individual per-algorithm Unix utilities like `md5sum`, `sha1sum`,
@@ -26,7 +26,7 @@ to the individual per-algorithm backend like <pm:Digest::MD5>, <pm:Digest::SHA>,
 and so on. Most of the backend modules are written in C/XS so you don't suffer
 significant performance decrease.
 
-_
+MARKDOWN
     args => {
         tag => {
             summary => 'Create a BSD-style checksum',
@@ -54,7 +54,7 @@ _
         },
         algorithm => {
             schema => ['str*', in=>[qw/crc32 md5 sha1 sha224 sha256 sha384 sha512 sha512224 sha512256 Digest/]],
-            description => <<'_',
+            description => <<'MARKDOWN',
 
 In addition to `md5`, `sha1` or the other algorithms, you can also specify
 `Digest` to use Perl's <pm:Digest> module. This gives you access to tens of
@@ -64,7 +64,7 @@ When `--digest-args` (`-A`) is not specified, algorithm defaults to `md5`. But
 if `--digest-args` (`-A`) is specified, algorithm defaults to `Digest`, for
 convenience.
 
-_
+MARKDOWN
             cmdline_aliases => {a=>{}},
         },
         digest_args => {
@@ -77,12 +77,12 @@ _
                        #of=>'str*',
 
                        'x.perl.coerce_rules'=>['From_str::comma_sep']],
-            description => <<'_',
+            description => <<'MARKDOWN',
 
 If you use `Digest` as the algorithm, you can pass arguments for the <pm:Digest>
 module here.
 
-_
+MARKDOWN
             cmdline_aliases => {A=>{}},
             completion => sub {
                 # due to coerce rule 'str_comma_sep', 'completion' instead of
